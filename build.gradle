@@ -94,6 +94,10 @@ configurations {
     examplesCompile.extendsFrom mainCompile
     examplesRuntime.extendsFrom mainRuntime
 }
+dependencies {
+	examplesImplementation 'com.google.auto.value:auto-value-annotations:1.6.2'
+	examplesAnnotationProcessor 'com.google.auto.value:auto-value:1.6.2'
+}
 
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
@@ -125,7 +129,7 @@ cucumber {
     maxParallelForks = 4
 }
 cucumberTest {
-    stepDefinitionRoots = ['com.pervasivecode.utils.concurrent.test.cucumber.steps']
+    stepDefinitionRoots = ['com.pervasivecode.utils.concurrent.testing.cucumber']
 }
 dependencies {
     cucumberTestImplementation 'io.cucumber:cucumber-java8:4.2.0'
