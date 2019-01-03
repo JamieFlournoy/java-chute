@@ -1,4 +1,4 @@
-package com.pervasivecode.utils.concurrent;
+package com.pervasivecode.utils.concurrent.chute;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 

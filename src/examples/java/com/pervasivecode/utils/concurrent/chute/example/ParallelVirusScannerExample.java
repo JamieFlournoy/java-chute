@@ -40,41 +40,11 @@ import com.pervasivecode.utils.time.api.CurrentNanosSource;
  * "file headers" (which are actually just chapter headings).
  * <p>
  * The "files" are also searched in parallel.
- * 
+ *
  * @see SingleThreadedVirusScannerExample for a simpler implementation that might help you
  *      understand what this code is doing.
  */
 public class ParallelVirusScannerExample implements ExampleApplication {
-
-  @AutoValue
-  public abstract static class SectionWithIndex {
-    public static SectionWithIndex of(int sectionIndex, String sectionContent) {
-      return new AutoValue_ParallelVirusScannerExample_SectionWithIndex(sectionIndex,
-          sectionContent);
-    }
-    public abstract int sectionIndex();
-    public abstract String sectionContent(); 
-  }
-  
-  @AutoValue
-  public abstract static class SectionResult implements Comparable<SectionResult> {
-    public static SectionResult of(int sectionIndex, String scanReport) {
-      return new AutoValue_ParallelVirusScannerExample_SectionResult(sectionIndex, scanReport);
-    }
-    public abstract int sectionIndex();
-    public abstract String scanReport();
-
-    // Order by sectionIndex, then by scanReport.
-    @Override
-    public int compareTo(SectionResult other) {
-      Objects.requireNonNull(other);
-      int sectionIndexCmp = Integer.compare(this.sectionIndex(), other.sectionIndex());
-      if (sectionIndexCmp != 0) {
-        return sectionIndexCmp;
-      }
-      return scanReport().compareTo(other.scanReport());
-    }
-  }
 
   private final boolean useVerboseOutput;
 
@@ -124,8 +94,8 @@ public class ParallelVirusScannerExample implements ExampleApplication {
     BufferingChute<SectionResult> sectionResultChute =
         new BufferingChute<>(sectionResultChuteSize, nanosSource);
 
-    // Let each SectionProcessor have its own ChuteEntrance that it can close when it's done,
-    // closing the real sectionResultChute when all of these ChuteEntrances have been closed. 
+    // Give each SectionProcessor its own ChuteEntrance that it can close when it's done, closing
+    // the real sectionResultChute when the last of these ChuteEntrances is closed.
     SynchronousMultiplexer<SectionResult> sectionResultMultiplexer =
         new SynchronousMultiplexer<>(numSectionProcessors, sectionResultChute);
     List<ChuteEntrance<SectionResult>> resultChutes = sectionResultMultiplexer.inputChutes();
@@ -166,8 +136,6 @@ public class ParallelVirusScannerExample implements ExampleApplication {
       futureSectionProcessorResult.get(10, SECONDS);
     }
     futureResultCombinerResult.get(10, SECONDS);
-
-    // TODO: report queue & processing times based on a MultistageStopwatch
   }
 
   private static class SectionProcessor implements Callable<Void> {
@@ -209,5 +177,35 @@ public class ParallelVirusScannerExample implements ExampleApplication {
 
   public static void main(String[] args) throws Exception {
     new ParallelVirusScannerExample(true).runExample(new PrintWriter(System.out, true, UTF_8));
+  }
+
+  @AutoValue
+  public abstract static class SectionWithIndex {
+    public static SectionWithIndex of(int sectionIndex, String sectionContent) {
+      return new AutoValue_ParallelVirusScannerExample_SectionWithIndex(sectionIndex,
+          sectionContent);
+    }
+    public abstract int sectionIndex();
+    public abstract String sectionContent();
+  }
+
+  @AutoValue
+  public abstract static class SectionResult implements Comparable<SectionResult> {
+    public static SectionResult of(int sectionIndex, String scanReport) {
+      return new AutoValue_ParallelVirusScannerExample_SectionResult(sectionIndex, scanReport);
+    }
+    public abstract int sectionIndex();
+    public abstract String scanReport();
+
+    // Order by sectionIndex, then by scanReport.
+    @Override
+    public int compareTo(SectionResult other) {
+      Objects.requireNonNull(other);
+      int sectionIndexCmp = Integer.compare(this.sectionIndex(), other.sectionIndex());
+      if (sectionIndexCmp != 0) {
+        return sectionIndexCmp;
+      }
+      return scanReport().compareTo(other.scanReport());
+    }
   }
 }

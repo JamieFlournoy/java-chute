@@ -33,7 +33,7 @@ public class WorkersTest {
 
   private CurrentNanosSource nanosSource;
   private BufferingChute<Object> objectInput;
-  private BufferingChute<ImmutableList<Object>> objectOutput;
+  private BufferingChute<List<Object>> objectOutput;
   private BufferingChute<String> stringInput;
   private BufferingChute<String> stringOutput;
   private TimeSource timeSource;
@@ -230,7 +230,7 @@ public class WorkersTest {
     Runnable transformer = Workers.batchingWorker(objectInput, objectOutput, 5, true);
     transformer.run();
     assertThat(objectInput.isClosedAndEmpty()).isTrue();
-    Optional<ImmutableList<Object>> o = objectOutput.take();
+    Optional<List<Object>> o = objectOutput.take();
     assertThat(o.isPresent()).isFalse();
     assertThat(objectOutput.isClosedAndEmpty()).isTrue();
   }
@@ -244,7 +244,7 @@ public class WorkersTest {
     Runnable transformer = Workers.batchingWorker(objectInput, objectOutput, batchSize, true);
     transformer.run();
 
-    Optional<ImmutableList<Object>> possibleBatch;
+    Optional<List<Object>> possibleBatch;
     int remainingElements = numElements;
     int iterations = 0;
     while (remainingElements > 0 && iterations < numElements) {
@@ -306,7 +306,7 @@ public class WorkersTest {
     objectInput.close();
     transformResult.get(100, MILLISECONDS);
 
-    Optional<ImmutableList<Object>> output = objectOutput.tryTakeNow();
+    Optional<List<Object>> output = objectOutput.tryTakeNow();
     assertThat(output.isPresent()).isTrue();
     assertThat(output.get()).containsExactly("one", "two", "three").inOrder();
 
@@ -327,7 +327,7 @@ public class WorkersTest {
     objectInput.put("thing 1");
     objectInput.put("thing 2");
     objectInput.put("thing 3");
-    Optional<ImmutableList<Object>> result = objectOutput.tryTake(10, MILLISECONDS);
+    Optional<List<Object>> result = objectOutput.tryTake(10, MILLISECONDS);
     assertThat(result.isPresent()).isTrue();
 
     // Now we interrupt the worker, and give it a chance to terminate.
@@ -430,7 +430,7 @@ public class WorkersTest {
     batcher.run();
     assertThat(objectInput.isClosedAndEmpty()).isTrue();
 
-    Optional<ImmutableList<Object>> o = objectOutput.tryTakeNow();
+    Optional<List<Object>> o = objectOutput.tryTakeNow();
     assertThat(o.isPresent()).isTrue();
     assertThat(o.get()).containsExactly("one");
 
@@ -459,7 +459,7 @@ public class WorkersTest {
 
     transformer.run();
 
-    Optional<ImmutableList<Object>> possibleBatch;
+    Optional<List<Object>> possibleBatch;
     int remainingElements = numElements;
     int iterations = 0;
     while (remainingElements > 0 && iterations < numElements) {
@@ -533,7 +533,7 @@ public class WorkersTest {
     // Grab an element from the output Chute so that we can be sure the worker is up & running.
     objectInput.put("something");
     long longerThanBatchInterval = maxTimeBetweenBatches.toMillis() * 2;
-    Optional<ImmutableList<Object>> result =
+    Optional<List<Object>> result =
         objectOutput.tryTake(longerThanBatchInterval, MILLISECONDS);
     assertThat(result.isPresent()).isTrue();
 
@@ -567,7 +567,7 @@ public class WorkersTest {
     objectInput.close();
     transformResult.get(100, MILLISECONDS);
 
-    Optional<ImmutableList<Object>> output = objectOutput.tryTakeNow();
+    Optional<List<Object>> output = objectOutput.tryTakeNow();
     assertThat(output.isPresent()).isTrue();
     assertThat(output.get()).containsExactly("one", "two").inOrder();
 
@@ -590,7 +590,7 @@ public class WorkersTest {
     objectInput.put("two");
 
     // Block until the first batch is available.
-    Optional<ImmutableList<Object>> o = objectOutput.take();
+    Optional<List<Object>> o = objectOutput.take();
     assertThat(o.isPresent()).isTrue();
     assertThat(o.get()).containsExactly("one", "two").inOrder();
 

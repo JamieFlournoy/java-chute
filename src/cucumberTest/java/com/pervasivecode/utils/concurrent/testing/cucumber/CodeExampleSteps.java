@@ -2,7 +2,6 @@ package com.pervasivecode.utils.concurrent.testing.cucumber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.truth.Truth.assertThat;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import com.pervasivecode.utils.concurrent.chute.example.ExampleApplication;

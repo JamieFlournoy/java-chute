@@ -6,6 +6,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import com.google.common.collect.ImmutableList;
@@ -36,9 +37,14 @@ public class Workers {
    *        partial batch.
    * @param maxTimeBetweenBatches The amount of time to wait for a batch to be completed before just
    *        sending a partial batch into the output ChuteEntrance.
+   * @param <I> The type of object that the input chute emits. (The output chute must accept Lists
+   *        containing this type.)
+   *
+   * @return A Runnable worker that will do the specified batching work and optional closing of the
+   *         output chute.
    */
   public static <I> Runnable periodicBatchingWorker(ChuteExit<I> input,
-      ChuteEntrance<ImmutableList<I>> output, int batchSize, boolean closeOutputWhenDone,
+      ChuteEntrance<List<I>> output, int batchSize, boolean closeOutputWhenDone,
       TimeSource timeSource, Duration maxTimeBetweenBatches) {
     return new PeriodicBatchingWorker<>(input, output, batchSize, closeOutputWhenDone, timeSource,
         maxTimeBetweenBatches);
@@ -46,7 +52,7 @@ public class Workers {
 
   private static class PeriodicBatchingWorker<E> implements Runnable {
     private ChuteExit<E> input;
-    private ChuteEntrance<ImmutableList<E>> output;
+    private ChuteEntrance<List<E>> output;
     private final int maxBatchSize;
     private ArrayList<E> builder;
     private final TimeSource timeSource;
@@ -54,7 +60,7 @@ public class Workers {
     private Instant whenToFlush;
     private boolean closeOutputWhenDone;
 
-    public PeriodicBatchingWorker(ChuteExit<E> input, ChuteEntrance<ImmutableList<E>> output,
+    public PeriodicBatchingWorker(ChuteExit<E> input, ChuteEntrance<List<E>> output,
         int maxBatchSize, boolean closeOutputWhenDone, TimeSource timeSource,
         Duration maxTimeBetweenBatches) {
       this.input = checkNotNull(input);
@@ -125,6 +131,9 @@ public class Workers {
    * @param closeOutputWhenDone If true, when the input ChuteExit closes and the last transformed
    *        element has been placed into the output ChuteEntrance, the worker will close the output
    *        ChuteEntrance.
+   * @param <T> The type of object that the input chute emits, and the input type of the converter.
+   * @param <V> The type of object that the converter produces, and the type of the output chute.
+   *
    * @return A Runnable worker that will perform the specified transformation and optional closing
    *         of the output ChuteEntrance.
    */
@@ -155,7 +164,7 @@ public class Workers {
    * The transformer will wait indefinitely for enough input elements to create a batch, unless the
    * input chute closes, in which case it will send the last batch immediately. For a transformer
    * that will periodically flush batches regardless of size, use
-   * {@link #batchingPeriodicTransformer(ChuteExit, ChuteEntrance, int, TimeSource, Duration)}.
+   * {@link #periodicBatchingWorker(ChuteExit, ChuteEntrance, int, boolean, TimeSource, Duration)}.
    *
    * @param input The source of elements to be collected into batches.
    * @param output The chute into which batches of elements will be placed.
@@ -164,22 +173,27 @@ public class Workers {
    *        this size.
    * @param closeOutputWhenDone Whether to close the output chute after the last batch has been
    *        sent.
+   * @param <I> The type of object that the input chute emits. (The output chute must accept Lists
+   *        containing this type.)
+   *
+   * @return A Runnable worker that will do the specified batching work and optional closing of the
+   *         output chute.
    */
-  public static <I> Runnable batchingWorker(ChuteExit<I> input,
-      ChuteEntrance<ImmutableList<I>> output, int maxBatchSize, boolean closeOutputWhenDone) {
+  public static <I> Runnable batchingWorker(ChuteExit<I> input, ChuteEntrance<List<I>> output,
+      int maxBatchSize, boolean closeOutputWhenDone) {
     return new BatchingWorker<I>(input, output, maxBatchSize, closeOutputWhenDone);
   }
 
 
   private static class BatchingWorker<E> implements Runnable {
     private ChuteExit<E> input;
-    private ChuteEntrance<ImmutableList<E>> output;
+    private ChuteEntrance<List<E>> output;
     private final int maxBatchSize;
     private ArrayList<E> builder;
     private boolean closeOutputWhenDone;
 
-    public BatchingWorker(ChuteExit<E> input, ChuteEntrance<ImmutableList<E>> output,
-        int maxBatchSize, boolean closeOutputWhenDone) {
+    public BatchingWorker(ChuteExit<E> input, ChuteEntrance<List<E>> output, int maxBatchSize,
+        boolean closeOutputWhenDone) {
       this.input = checkNotNull(input);
       this.output = checkNotNull(output);
       checkArgument(maxBatchSize > 0, "maxBatchSize must be greater than 0. Got %s", maxBatchSize);

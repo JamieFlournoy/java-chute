@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
  * ChuteEntrance, all with the same element type. When all of the ChuteEntrances are closed, the
  * output ChuteEntrance will be closed.
  *
- * @param <E>
+ * @param <E> The type of object that can be sent through the SynchronousMultiplexer.
  */
 public class SynchronousMultiplexer<E> {
   private final AtomicInteger numInputChutesStillOpen;

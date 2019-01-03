@@ -22,8 +22,11 @@ public class SingleThreadedVirusScannerExample implements ExampleApplication {
     if (useVerboseOutput) {
       output.println("Scanning for viruses...");
     }
+    // Read all of the archive data into a String.
     String archiveContents = Archive.getArchiveAsString();
+    // Split the String into chapters.
     Iterable<String> sections = Archive.getSections(archiveContents);
+    // Search each chapter for "virus" occurrences and print scan reports to the output PrintWriter.
     for (String section : sections) {
       VirusScanner.scanOneFile(section, output, useVerboseOutput);
     }
