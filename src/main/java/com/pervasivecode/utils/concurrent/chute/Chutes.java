@@ -99,6 +99,7 @@ public class Chutes {
         buffer = source.take();
       } catch (@SuppressWarnings("unused") InterruptedException e) {
         // Stop iterating. hasNext will return false and next() will throw from this point on.
+        buffer = Optional.empty();
         interrupted = true;
       }
     }
@@ -132,7 +133,23 @@ public class Chutes {
     }
   }
 
-
+  /**
+   * Wrap the specified {@link ChuteExit} with an {@link Iterable}, which will {@link #take}
+   * elements from the {@link ChuteExit} until it is closed and empty.
+   * <p>
+   * Elements put into the Chute after the Iterable is created will become available via the
+   * Iterable. Elements taken from the ChuteExit separately (by other threads, or by this thread but
+   * not using the Iterable) will not be available via the Iterable.
+   * <p>
+   * Individual Iterator instances produced by this Iterable can only be used by a single thread per
+   * Iterator, but multiple Iterators can safely be used to consume elements from the ChuteExit as
+   * long as each Iterator is used by a single thread. Each Iterator will see a mutually-exclusive
+   * set of elements taken from the ChuteExit; they are not all iterating over the same series of
+   * elements.
+   *
+   * @param source The source of elements for the Iterable.
+   * @return An Iterable that will produce Iterators that present elements taken from the ChuteExit.
+   */
   public static <T> Iterable<T> asIterable(ChuteExit<T> source) {
     return new ChuteIterableAdapter<>(source);
   }
