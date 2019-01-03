@@ -6,6 +6,9 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+/**
+ * Factory methods for representing {@link ChuteEntrance}s and {@link ChuteExit}s in useful ways.
+ */
 public class Chutes {
   private Chutes() {}
 
@@ -134,8 +137,8 @@ public class Chutes {
   }
 
   /**
-   * Wrap the specified {@link ChuteExit} with an {@link Iterable}, which will {@link #take}
-   * elements from the {@link ChuteExit} until it is closed and empty.
+   * Wrap the specified {@link ChuteExit} with an {@link Iterable}, which will {@link ChuteExit#take
+   * take} elements from the {@link ChuteExit} until it is closed and empty.
    * <p>
    * Elements put into the Chute after the Iterable is created will become available via the
    * Iterable. Elements taken from the ChuteExit separately (by other threads, or by this thread but
@@ -148,17 +151,46 @@ public class Chutes {
    * elements.
    *
    * @param source The source of elements for the Iterable.
+   * @param <T> The type of object that the ChuteExit and Iterator emit.
    * @return An Iterable that will produce Iterators that present elements taken from the ChuteExit.
    */
   public static <T> Iterable<T> asIterable(ChuteExit<T> source) {
     return new ChuteIterableAdapter<>(source);
   }
 
+  /**
+   * Wrap a given ChuteEntrance with a ChuteEntrance that applies a specified function to each input
+   * element and puts the resulting objects into the wrapped ChuteEntrance.
+   *
+   * @param receiver The ChuteEntrance that will receive the results of applying the function.
+   * @param transformer A function that will be applied to every element that is put into the
+   *        ChuteEntrance that this method returns.
+   * @param <T> The type of object that the function accepts, which will also be the type that the
+   *        returned ChuteEntrance accepts.
+   * @param <V> The type of object that the function produces, which must also be the type that the
+   *        receiver ChuteEntrance accepts.
+   * @return A ChuteEntrance that will apply the specified function and put the resulting objects
+   *         into the receiver ChuteEntrance.
+   */
   public static <T, V> ChuteEntrance<T> transformingEntrance(ChuteEntrance<V> receiver,
       Function<T, V> transformer) {
     return new TransformingEntrance<T, V>(receiver, transformer);
   }
 
+  /**
+   * Wrap a given ChuteExit with a ChuteExit that applies a specific function to each element of the
+   * supplier ChuteExit.
+   *
+   * @param supplier The ChuteExit from which the objects are taken, before the function is applied.
+   * @param transformer The function that will be applied to each object taken from the supplier
+   *        ChuteExit.
+   * @param <T> The type of object that the function accepts, which must also be the type that the
+   *        supplier ChuteExit provides.
+   * @param <V> The type of object that the function produces, which will also be the type that the
+   *        returned ChuteExit provides.
+   * @return A ChuteExit that applies the specified function to objects taken from the supplier
+   *         ChuteExit.
+   */
   public static <T, V> ChuteExit<V> transformingExit(ChuteExit<T> supplier,
       Function<T, V> transformer) {
     return new TransformingExit<T, V>(supplier, transformer);

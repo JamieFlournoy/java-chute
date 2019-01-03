@@ -12,6 +12,9 @@ import java.util.function.Function;
 import com.google.common.collect.ImmutableList;
 import com.pervasivecode.utils.time.api.TimeSource;
 
+/**
+ * Factory methods for executable workers that process elements from {@link Chute} instances.
+ */
 public class Workers {
 
   private Workers() {};
