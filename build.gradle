@@ -67,6 +67,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.+'
     testImplementation "com.google.truth:truth:0.42"
     testImplementation 'com.github.cbismuth:junit-repeat-rule:1.1.2'
+    testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.0.3'
 
     // To make the Eclipse Gradle Buildship plugin put Cucumber jars on the source path:
     testImplementation 'io.cucumber:cucumber-java8:4.2.0'

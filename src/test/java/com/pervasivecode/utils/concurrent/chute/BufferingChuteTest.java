@@ -15,12 +15,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import com.google.common.truth.Truth;
 import com.pervasivecode.utils.time.testing.FakeNanoSource;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import repeat.Repeat;
 import repeat.RepeatRule;
 
 public class BufferingChuteTest {
   // Use NUM_REPEATS=500 for torture testing.
-  private static final int NUM_REPEATS = 50;
+//  private static final int NUM_REPEATS = 50;
+  private static final int NUM_REPEATS = 1;
 
   @Rule
   public RepeatRule rule = new RepeatRule();
@@ -180,6 +182,13 @@ public class BufferingChuteTest {
 
     assertThat(putResult.get(10, MILLISECONDS)).isEqualTo("Channel is already closed.");
     es.shutdownNow();
+  }
+
+  @Test(expected = NullPointerException.class)
+  @Repeat(times = NUM_REPEATS)
+  public void put_withNullValue_shouldThrow() throws Exception {
+    Chute<String> c = new BufferingChute<>(10, currentNanoSource);
+    c.put(null);
   }
 
   // --------------------------------------------------------------------------
@@ -441,5 +450,17 @@ public class BufferingChuteTest {
       assertThat(result2.isPresent()).isTrue();
     }
     es.shutdownNow();
+  }
+
+  // --------------------------------------------------------------------------
+  //
+  // Tests for equals, hashCode
+  //
+  // --------------------------------------------------------------------------
+
+  @Test
+  public void equals_shouldWorkCorrectly() {
+    EqualsVerifier.forClass(BufferingChute.Datum.class).verify();
+    EqualsVerifier.forClass(BufferingChute.class).verify();
   }
 }

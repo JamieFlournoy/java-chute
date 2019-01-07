@@ -15,7 +15,7 @@ public interface ChuteExit<E> {
    * the channel is closed while the caller is blocked waiting for an element, the return value with
    * be Optional.empty().
    *
-   * @param timeout The magnitute of the timeout value.
+   * @param timeout The magnitude of the timeout value.
    * @param timeoutUnit The units of the timeout value.
    * @return An element (if one was available in time), or {@link Optional#empty()} otherwise.
    * @throws InterruptedException if the calling thread is interrupted while waiting.

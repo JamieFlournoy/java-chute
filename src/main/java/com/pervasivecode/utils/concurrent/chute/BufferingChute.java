@@ -2,6 +2,7 @@ package com.pervasivecode.utils.concurrent.chute;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -12,15 +13,14 @@ import javax.annotation.Nonnull;
 import com.pervasivecode.utils.time.api.CurrentNanosSource;
 
 /**
- * This Chute implementaton is based around a BlockingQueue, providing a fixed-size nonzero-capacity
- * buffer holding elements that have been put into the ChuteEntrance but not yet taken from the
- * ChuteExit.
+ * A Chute based on a BlockingQueue, providing a fixed-size nonzero-capacity buffer that holds
+ * elements that have been put into the ChuteEntrance but not yet taken from the ChuteExit.
  *
  * @param <E> The type of object that can be sent through the BufferingChute.
  */
-public class BufferingChute<E> implements Chute<E> {
-  private static class Datum<L> {
-    public L wrappedElement;
+public final class BufferingChute<E> implements Chute<E> {
+  static final class Datum<L> {
+    public final L wrappedElement;
 
     /**
      * @param elementToWrap should only be null for the eofDatum instance.
@@ -28,13 +28,30 @@ public class BufferingChute<E> implements Chute<E> {
     public Datum(L elementToWrap) {
       wrappedElement = elementToWrap;
     }
+
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(wrappedElement);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+      if (other == this) {
+        return true;
+      }
+      if (!(other instanceof Datum)) {
+        return false;
+      }
+      Datum<?> otherDatum = (Datum<?>) other;
+      return Objects.equals(otherDatum.wrappedElement, this.wrappedElement);
+    }
   }
 
   private final ArrayBlockingQueue<Datum<E>> buffer;
   private final CurrentNanosSource nanosSource;
 
   private final AtomicBoolean isOpen = new AtomicBoolean(true);
-  private Datum<E> eofDatum;
+  private final Datum<E> eofDatum;
 
   // Lock used to guard against adding a new, non-EOF datum when the chute is closed or closing:
   private final Lock putLock = new ReentrantLock();
@@ -49,10 +66,15 @@ public class BufferingChute<E> implements Chute<E> {
 
     this.nanosSource = checkNotNull(nanosSource);
 
+    // TODO find a way to not use an eofDatum.
     E eofValue = null;
     this.eofDatum = new Datum<>(eofValue);
   }
 
+  private boolean isEof(Datum<E> datum) {
+    return datum.wrappedElement == null;
+  }
+  
   //
   // Methods from ChuteEntrance
   //
@@ -122,7 +144,7 @@ public class BufferingChute<E> implements Chute<E> {
         return Optional.empty();
       }
 
-      if (datum == this.eofDatum) {
+      if (isEof(datum)) {
         // Oops; we didn't mean to take that instance. Put it back.
         buffer.put(datum);
         // The channel is closed.
@@ -136,7 +158,7 @@ public class BufferingChute<E> implements Chute<E> {
   }
 
   private boolean isNullOrEof(Datum<E> datum) {
-    return (datum == null || datum == this.eofDatum);
+    return (datum == null || isEof(datum));
   }
 
   @Override
@@ -172,7 +194,7 @@ public class BufferingChute<E> implements Chute<E> {
     takeLock.lockInterruptibly();
     try {
       final Datum<E> takenDatum = buffer.take(); // will not return null
-      if (takenDatum == this.eofDatum) {
+      if (isEof(takenDatum)) {
         buffer.put(takenDatum);
         return Optional.empty();
       }
@@ -191,5 +213,27 @@ public class BufferingChute<E> implements Chute<E> {
       }
     }
     return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(buffer, nanosSource, isOpen, eofDatum, putLock, takeLock);
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (other == this) {
+      return true;
+    }
+    if (!(other instanceof BufferingChute)) {
+      return false;
+    }
+    BufferingChute<?> otherChute = (BufferingChute<?>) other; 
+    return Objects.equals(otherChute.buffer, this.buffer)
+        && Objects.equals(otherChute.nanosSource, this.nanosSource)
+        && Objects.equals(otherChute.isOpen, this.isOpen)
+        && Objects.equals(otherChute.eofDatum, this.eofDatum)
+        && Objects.equals(otherChute.putLock, this.putLock)
+        && Objects.equals(otherChute.takeLock, this.takeLock);
   }
 }

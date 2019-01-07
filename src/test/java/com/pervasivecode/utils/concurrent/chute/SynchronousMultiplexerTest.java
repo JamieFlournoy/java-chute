@@ -17,6 +17,8 @@ import com.google.common.truth.Truth;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.pervasivecode.utils.time.testing.FakeNanoSource;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
 public class SynchronousMultiplexerTest {
 
@@ -223,5 +225,13 @@ public class SynchronousMultiplexerTest {
     output.close();
     assertThat(input1.isClosed()).isTrue();
     assertThat(input2.isClosed()).isTrue();
+  }
+
+  @Test
+  public void equals_shouldWorkCorrectly() {
+    EqualsVerifier.forClass(SynchronousMultiplexer.class).verify();
+
+    EqualsVerifier.forClass(SynchronousMultiplexer.MultiplexingEntrance.class)
+        .suppress(Warning.NONFINAL_FIELDS).verify();
   }
 }

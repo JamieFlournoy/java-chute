@@ -1,11 +1,10 @@
 package com.pervasivecode.utils.concurrent.chute;
 
 /**
- * A Chute is a closable conduit between producers of elements and consumers of objects of a given
- * type.
+ * A Chute is a closable conduit between producers and consumers of objects of a given type.
  * 
  * A Chute provides put, take, and close operations. After being closed, a Chute will not accept new
- * elements, but will allow consumers to take all of the remaining elements.
+ * elements, but will allow consumers to take all of the remaining elements in the chute.
  * 
  * @param <E> The type of object that can be sent through the chute.
  */

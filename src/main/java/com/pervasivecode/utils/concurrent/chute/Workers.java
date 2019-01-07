@@ -1,19 +1,13 @@
 package com.pervasivecode.utils.concurrent.chute;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
-import com.google.common.collect.ImmutableList;
 import com.pervasivecode.utils.time.api.TimeSource;
 
 /**
- * Factory methods for executable workers that process elements from {@link Chute} instances.
+ * Factory methods for executable workers that process elements taken from {@link Chute}s.
  */
 public class Workers {
 
@@ -53,76 +47,6 @@ public class Workers {
         maxTimeBetweenBatches);
   }
 
-  private static class PeriodicBatchingWorker<E> implements Runnable {
-    private ChuteExit<E> input;
-    private ChuteEntrance<List<E>> output;
-    private final int maxBatchSize;
-    private ArrayList<E> builder;
-    private final TimeSource timeSource;
-    private final Duration maxTimeBetweenBatches;
-    private Instant whenToFlush;
-    private boolean closeOutputWhenDone;
-
-    public PeriodicBatchingWorker(ChuteExit<E> input, ChuteEntrance<List<E>> output,
-        int maxBatchSize, boolean closeOutputWhenDone, TimeSource timeSource,
-        Duration maxTimeBetweenBatches) {
-      this.input = checkNotNull(input);
-      this.output = checkNotNull(output);
-
-      checkArgument(maxBatchSize > 0, "maxBatchSize must be greater than 0. Got %s", maxBatchSize);
-      this.maxBatchSize = maxBatchSize;
-      this.builder = new ArrayList<>(maxBatchSize);
-      this.closeOutputWhenDone = closeOutputWhenDone;
-
-      this.timeSource = checkNotNull(timeSource);
-      checkArgument(!maxTimeBetweenBatches.equals(Duration.ZERO),
-          "maxTimeBetweenBatches cannot be zero.");
-      this.maxTimeBetweenBatches = checkNotNull(maxTimeBetweenBatches);
-      this.whenToFlush = timeSource.now().plus(maxTimeBetweenBatches);
-    }
-
-    @Override
-    public void run() {
-      try {
-        boolean inputClosed = false;
-        while (!inputClosed) {
-          boolean sendBatch = false;
-          Instant now = timeSource.now();
-          long millisToWait =
-              whenToFlush.isAfter(now) ? Duration.between(now, whenToFlush).toMillis() : 0;
-          Optional<E> taken = input.tryTake(millisToWait, MILLISECONDS);
-          if (taken.isPresent()) {
-            builder.add(taken.get());
-            if (builder.size() >= maxBatchSize) {
-              sendBatch = true;
-            }
-          } else {
-            // tryTake didn't return anything. This could mean that the input is closed, or it could
-            // mean that we just timed out and should send a partial batch.
-            if (input.isClosedAndEmpty()) {
-              inputClosed = true;
-            }
-            if (!builder.isEmpty()) {
-              sendBatch = true;
-            }
-          }
-          if (sendBatch) {
-            ImmutableList<E> batch = ImmutableList.copyOf(builder);
-            builder.clear();
-            output.put(batch);
-            whenToFlush = timeSource.now().plus(maxTimeBetweenBatches);
-          }
-        }
-        if (closeOutputWhenDone) {
-          output.close();
-        }
-      } catch (@SuppressWarnings("unused") InterruptedException ie) {
-        // Just stop processing and exit.
-      }
-    }
-  }
-
-
   /**
    * Create a Runnable worker that will transform elements from a ChuteExit using a function,
    * putting the resulting elements into a ChuteEntrance, until the ChuteExit is closed (or the
@@ -150,7 +74,9 @@ public class Workers {
         for (T inputElement : Chutes.asIterable(input)) {
           output.put(converter.apply(inputElement));
         }
-        if (closeOutputWhenDone) {
+        // The input might not be closed and empty if we were interrupted during iteration. Only
+        // close the output if we kept iterating until the input chute was closed & empty.
+        if (closeOutputWhenDone && input.isClosedAndEmpty()) {
           output.close();
         }
       } catch (@SuppressWarnings("unused") InterruptedException e) {
@@ -158,7 +84,6 @@ public class Workers {
       }
     };
   }
-
 
   /**
    * Returns a Runnable that will take all of the elements from the input ChuteExit, group them into
@@ -185,56 +110,5 @@ public class Workers {
   public static <I> Runnable batchingWorker(ChuteExit<I> input, ChuteEntrance<List<I>> output,
       int maxBatchSize, boolean closeOutputWhenDone) {
     return new BatchingWorker<I>(input, output, maxBatchSize, closeOutputWhenDone);
-  }
-
-
-  private static class BatchingWorker<E> implements Runnable {
-    private ChuteExit<E> input;
-    private ChuteEntrance<List<E>> output;
-    private final int maxBatchSize;
-    private ArrayList<E> builder;
-    private boolean closeOutputWhenDone;
-
-    public BatchingWorker(ChuteExit<E> input, ChuteEntrance<List<E>> output, int maxBatchSize,
-        boolean closeOutputWhenDone) {
-      this.input = checkNotNull(input);
-      this.output = checkNotNull(output);
-      checkArgument(maxBatchSize > 0, "maxBatchSize must be greater than 0. Got %s", maxBatchSize);
-      this.maxBatchSize = maxBatchSize;
-      this.builder = new ArrayList<>(maxBatchSize);
-      this.closeOutputWhenDone = closeOutputWhenDone;
-    }
-
-    @Override
-    public void run() {
-      try {
-        boolean inputClosed = false;
-        while (!inputClosed) {
-          boolean sendBatch = false;
-          Optional<E> taken = input.take();
-          if (taken.isPresent()) {
-            builder.add(taken.get());
-            if (builder.size() >= maxBatchSize) {
-              sendBatch = true;
-            }
-          } else {
-            inputClosed = true;
-            if (!builder.isEmpty()) {
-              sendBatch = true;
-            }
-          }
-          if (sendBatch) {
-            ImmutableList<E> batch = ImmutableList.copyOf(builder);
-            builder.clear();
-            output.put(batch);
-          }
-        }
-        if (closeOutputWhenDone) {
-          output.close();
-        }
-      } catch (@SuppressWarnings("unused") InterruptedException ie) {
-        // Just stop processing and exit.
-      }
-    }
   }
 }
