@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.truth.Truth.assertThat;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import com.pervasivecode.utils.concurrent.chute.example.DinerExample;
 import com.pervasivecode.utils.concurrent.chute.example.ExampleApplication;
 import com.pervasivecode.utils.concurrent.chute.example.ParallelVirusScannerExample;
 import com.pervasivecode.utils.concurrent.chute.example.SingleThreadedVirusScannerExample;
@@ -15,28 +16,18 @@ public class CodeExampleSteps {
   private String commandOutput = "";
   private ExampleApplication codeExample = null;
 
-  @Given("^I am running the Parallel Virus Scanner Example$")
-  public void iAmRunningTheParallelVirusScannerExample() {
-    iAmRunningTheExample(new ParallelVirusScannerExample(false));
-  }
-
-  @Given("^I am running the Parallel Virus Scanner Example with Verbose Output$")
-  public void iAmRunningTheParallelVirusScannerExampleWithVerboseOutput() {
-    iAmRunningTheExample(new ParallelVirusScannerExample(true));
-  }
-
-  @Given("^I am running the Single-Threaded Virus Scanner Example$")
-  public void iAmRunningTheSingleThreadedVirusScannerExample() {
-    iAmRunningTheExample(new SingleThreadedVirusScannerExample(false));
-  }
-
-  @Given("^I am running the Single-Threaded Virus Scanner Example with Verbose Output$")
-  public void iAmRunningTheSingleThreadedVirusScannerExampleWithVerboseOutput() {
-    iAmRunningTheExample(new SingleThreadedVirusScannerExample(true));
-  }
-
-  private void iAmRunningTheExample(ExampleApplication exampleClass) {
-    this.codeExample = exampleClass;
+  @Given("^I am running the (.*) Example( with Verbose Output)?$")
+  public void iAmRunningAnExample(String exampleName, String optionalPart) {
+    boolean useVerboseOutput = " with Verbose Output".equals(optionalPart);
+    if (exampleName.equals("Parallel Virus Scanner")) {
+      this.codeExample = new ParallelVirusScannerExample(useVerboseOutput);
+    }
+    if (exampleName.equals("Single-Threaded Virus Scanner")) {
+      this.codeExample = new SingleThreadedVirusScannerExample(useVerboseOutput);
+    }
+    if (exampleName.equals("Diner")) {
+      this.codeExample = new DinerExample(useVerboseOutput);
+    }
     this.commandOutput = "";
   }
 

@@ -1,4 +1,4 @@
-Feature: Usage Examples
+Feature: Virus Scanner Example
 
 
   Scenario: Single-Thread Virus Scanner Example

@@ -1,6 +1,5 @@
 package com.pervasivecode.utils.concurrent.chute.example;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -173,10 +172,6 @@ public class ParallelVirusScannerExample implements ExampleApplication {
       sectionResultChute.close();
       return null;
     }
-  }
-
-  public static void main(String[] args) throws Exception {
-    new ParallelVirusScannerExample(true).runExample(new PrintWriter(System.out, true, UTF_8));
   }
 
   @AutoValue

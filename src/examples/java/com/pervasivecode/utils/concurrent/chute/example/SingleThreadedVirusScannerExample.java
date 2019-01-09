@@ -1,6 +1,5 @@
 package com.pervasivecode.utils.concurrent.chute.example;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -30,10 +29,5 @@ public class SingleThreadedVirusScannerExample implements ExampleApplication {
     for (String section : sections) {
       VirusScanner.scanOneFile(section, output, useVerboseOutput);
     }
-  }
-
-  public static void main(String[] args) throws Exception {
-    new SingleThreadedVirusScannerExample(true)
-        .runExample(new PrintWriter(System.out, true, UTF_8));
   }
 }

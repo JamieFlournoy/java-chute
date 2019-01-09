@@ -1,0 +1,51 @@
+[ Main course ]
+fried eggs
+scrambled eggs
+farmer's omelet
+plain omelet
+cheese omelet
+sausage omelet
+huevos rancheros
+breakfast burrito
+tofu scramble
+hamburger
+cheeseburger
+cheesesteak
+buffalo wings
+pancakes
+waffles
+
+
+[ Side ]
+toast
+hash browns
+home fries
+side salad with house dressing
+side salad with ranch dressing
+side salad with italian dressing
+biscuits
+cornbread
+grits
+sausage
+onion rings
+
+[ Beverage ]
+coffee
+orange juice
+iced tea
+ice water
+fizzy water
+cola
+diet cola
+vanilla milkshake
+chocolate milkshake
+malted milkshake
+
+
+[ Dessert ]
+apple pie
+cherry pie
+chocolate cake
+carrot cake
+vanilla ice cream
+chocolate ice cream
