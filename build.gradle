@@ -229,7 +229,7 @@ publishing {
 
                 pom {
                     name = 'Java Chute'
-                    description = 'Classes for simplifying producer/consumer processing.'
+                    description = 'Classes for simplifying producer/consumer parallel processing.'
                     url = 'https://github.com/JamieFlournoy/java-chute'
 
                     licenses {
