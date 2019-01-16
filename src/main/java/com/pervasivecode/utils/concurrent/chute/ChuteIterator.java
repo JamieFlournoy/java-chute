@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Iterator produced by ChuteIterableAdapter. See {@link Chutes#asIterable(ChuteExit)} for detailed
- * documentation.
+ * Iterator produced by {@link ChuteIterableAdapter}. See {@link Chutes#asIterable(ChuteExit)} for
+ * detailed documentation.
  * <p>
  * Use {@link Chutes#asIterable(ChuteExit)} to obtain an instance of {@link ChuteIterableAdapter},
  * and use that Iterable in a foreach loop, which will automatically use this Iterator class.

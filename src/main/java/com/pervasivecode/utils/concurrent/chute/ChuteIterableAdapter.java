@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable over elements taken from a ChuteExit. See {@link Chutes#asIterable(ChuteExit)} for
- * detailed documentation.
+ * Iterable over elements taken from a {@link ChuteExit}. See {@link Chutes#asIterable(ChuteExit)}
+ * for detailed documentation.
  * <p>
  * Use {@link Chutes#asIterable(ChuteExit)} to obtain an instance of this class.
  * 

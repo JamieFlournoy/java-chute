@@ -13,8 +13,9 @@ import javax.annotation.Nonnull;
 import com.pervasivecode.utils.time.api.CurrentNanosSource;
 
 /**
- * A Chute based on a BlockingQueue, providing a fixed-size nonzero-capacity buffer that holds
- * elements that have been put into the ChuteEntrance but not yet taken from the ChuteExit.
+ * A {@link Chute} based on a {@link java.util.concurrent.BlockingQueue BlockingQueue}, providing a
+ * fixed-size nonzero-capacity buffer that holds elements that have been put into the
+ * {@link ChuteEntrance} but not yet taken from the {@link ChuteExit}.
  *
  * @param <E> The type of object that can be sent through the BufferingChute.
  */

@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 /**
  * This is a single-threaded implementation of the ParallelVirusScannerExample code, to help clarify
  * what the parallel code does.
- * 
+ *
  * @see ParallelVirusScannerExample
  */
 public class SingleThreadedVirusScannerExample implements ExampleApplication {

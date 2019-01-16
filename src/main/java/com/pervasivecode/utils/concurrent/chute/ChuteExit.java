@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 
 /**
  * The output side of a chute, allowing callers to take elements from a chute until it is closed.
- * 
+ *
  * @param <E> The type of object that can be taken from the chute.
  */
 public interface ChuteExit<E> {
@@ -25,7 +25,7 @@ public interface ChuteExit<E> {
 
   /**
    * Take an element if it's available immediately. Otherwise, Optional.empty() is returned.
-   * 
+   *
    * @return An immediately-available element, or {@link Optional#empty()} if no element was
    *         available.
    */
@@ -36,7 +36,7 @@ public interface ChuteExit<E> {
    * <p>
    * If the caller blocks on an empty channel and the channel is closed during that time, the return
    * value with be Optional.empty().
-   * 
+   *
    * @return An element if one was available before the ChuteExit was closed, or
    *         {@link Optional#empty()} if none became available before it was closed.
    * @throws InterruptedException if the calling thread is interrupted while waiting.
@@ -58,7 +58,7 @@ public interface ChuteExit<E> {
    * thread in the future. The chute could be closed with no more elements made available, or any
    * elements made available in the future could be consumed by other threads before the current
    * thread has a chance to try and take an element again.)
-   * 
+   *
    * @return Whether the chute is both closed and empty.
    */
   public boolean isClosedAndEmpty();

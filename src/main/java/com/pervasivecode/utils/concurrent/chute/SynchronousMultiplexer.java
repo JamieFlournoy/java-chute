@@ -7,9 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.google.common.collect.ImmutableList;
 
 /**
- * A SynchronousMultiplexer provides multiple ChuteEntrance instances which all feed into a single
- * ChuteEntrance, all with the same element type. When all of the ChuteEntrances are closed, the
- * output ChuteEntrance will be closed.
+ * A SynchronousMultiplexer provides multiple {@link ChuteEntrance} instances which all feed into a
+ * single {@link ChuteEntrance}, all with the same element type. When all of the provided
+ * {@link ChuteEntrance}s are closed, the output {@link ChuteEntrance} will be closed.
  *
  * @param <E> The type of object that can be sent through the SynchronousMultiplexer.
  */
