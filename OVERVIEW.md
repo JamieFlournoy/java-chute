@@ -48,3 +48,30 @@ A SynchronousMultiplexer provides multiple `ChuteEntrance` instances which all f
 
 Factory methods for executable workers that process elements taken from `Chute`s.
 
+## Example Code
+
+### [DinerExample](src/examples/java/com/pervasivecode/utils/concurrent/chute/example/DinerExample.java)
+
+This example program shows how a single thread, representing a very busy waiter, can handle a large number of production queues, as long as the single thread doesn't have to block waiting for input, because it uses ListenableChute.
+
+
+### [ParallelVirusScannerExample](src/examples/java/com/pervasivecode/utils/concurrent/chute/example/ParallelVirusScannerExample.java)
+
+This example program is a virus scanner. It reads all of the individual files from an archive, and scans each one for viruses using a predefined set of virus signatures.
+
+When it finds a virus, it reports which file was being scanned and which virus or viruses were found.
+
+Optionally, it will also print the context of the match, showing the byte position where the match occurred and the bytes before and after the match.
+
+Well, actually, this is a _fake_ virus scanner. The "archive" is the The Project Gutenberg EBook of Moby Dick; the "files" are individual chapters, and the "virus signatures" are the words "ahoy", "Ahoy", "gangway", "tallow", "Yonder", and "yonder". The context shown in the verbose output includes the whole line that includes the "signature". See examples.feature for what the real output looks like.
+
+The "archive" is split into files in a separate thread that searches the archive content for "file headers" (which are actually just chapter headings).
+
+The "files" are also searched in parallel.
+
+See [SingleThreadedVirusScannerExample](src/examples/java/com/pervasivecode/utils/concurrent/chute/example/SingleThreadedVirusScannerExample.java) for a simpler, single-threaded implementation to help clarify what the parallel code does.
+
+
+
+
+
