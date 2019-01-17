@@ -32,6 +32,11 @@ plugins {
 
     // This adds tasks to measure code coverage with JaCoCo.
     id 'jacoco'
+
+    // This shows a tree of dependenices between tasks. Ex. "./gradlew
+    // javadoc taskTree" will show what tasks are brought up to date
+    // in order to bring 'javadoc' up to date."
+    id "com.dorongold.task-tree" version "1.3.1"
 }
 
 apply plugin: 'java-library'
@@ -125,6 +130,21 @@ jacocoTestReport {
     }
 }
 
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+            limit {
+                minimum = 0.95
+            }
+            excludes = [
+                // "com.pervasivecode.utils.concurrent.chute.testing.*"
+            ]
+        }
+    }
+}
+check.dependsOn jacocoTestCoverageVerification
+
 addCucumberSuite 'cucumberTest'
 cucumber {
     maxParallelForks = 4
@@ -152,6 +172,7 @@ sourceSets {
 cucumberTestClasses.dependsOn 'examplesClasses'
 // Don't run Cucumber integration tests unless JUnit unit tests pass.
 cucumberTest.dependsOn 'test'
+check.dependsOn 'cucumberTest'
 
 // Don't bother running benchmarks if integration tests fail.
 tasks.jmh.dependsOn 'cucumberTest'
