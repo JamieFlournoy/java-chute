@@ -2,15 +2,17 @@
 
 This library includes classes for simplifying producer/consumer parallel processing using a channel-like data structure called a Chute. 
 
+## Chute?
+
 A Chute is a closable conduit from producers to consumers  of objects of a given type. It is unidirectional and typed, similar to a bounded queue but with a substantially smaller API than [java.util.Queue][Queue].
 
 The API is deliberately limited to operations that are suited to a pool of competing workers. Additionally, the producer and consumer interfaces are separate (`ChuteEntrance` and `ChuteExit`), easing implementation of delegating wrapper classes that enhance basic chutes. Several examples of such classes are included with this library:
 
-* a multiplexer, allowing multiple producers to feed a single ChuteEntrance, with the ChuteEntrance only becoming closed when all of the producers have signaled that they are finished;
-* a transforming entrance and a transforming exit, allowing flexibility in deciding whether producers or consumers execute the transformation function;
-* an Iterable implementation that represents a ChuteExit in a way that is easy to use in a `foreach` loop, and which is suitable for such use by multiple workers, each of which will see their own subset of the Chute's contents;
-* executable workers that process elements taken from a ChuteExit, putting the results into a ChuteEntrance; and
-* a wrapper that allows a nonblocking listener to handle elements from a large number of ChuteExits.
+* a **multiplexer**, allowing multiple producers to feed a single ChuteEntrance, with the ChuteEntrance only becoming closed when all of the producers have signaled that they are finished;
+* a **transforming entrance** and a **transforming exit,** allowing flexibility in deciding whether producers or consumers execute the transformation function;
+* an **Iterable** implementation that represents a ChuteExit in a way that is easy to use in a `foreach` loop, and which is suitable for such use by multiple workers, each of which will see their own subset of the Chute's contents;
+* executable **workers** that process elements taken from a ChuteExit, putting the results into a ChuteEntrance; and
+* a wrapper that allows a **nonblocking listener** to handle elements from a large number of ChuteExits.
 
 ## Overview of included classes
 
@@ -24,19 +26,6 @@ See the separate [OVERVIEW.md](OVERVIEW.md) file for a description of what inter
 ## Alternatives to this library
 
 A list of [alternatives to this library](ALTERNATIVES.md) is included to help you determine whether this library is right for you.
-
-Some reasons why you might want to use this library instead of others:
-
-* It's conceptually simple and has good documentation, including Javadocs and [example code][], so you can understand it quickly.
-* Its API is designed to make it easy to use correctly, and difficult to use incorrectly.
-* It's based on plain old Java SE classes that you already know, and it lets you stick with familiar Java concurrency classes: [Executor][], [Runnable][], and [Callable][].
-
-Some reasons why you might want to use something else:
-
-* Other libraries have more complete implementations of concepts like actors, coroutines, or bidirectional channels.
-* Other libraries implement a mathematically verified model of concurrent systems design.
-* Other libraries have professional support contracts available, and are used in large enterprise projects.
-
 
 ## Including it in your project
 
@@ -79,14 +68,4 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-
-[Executor]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Executor.html
-
-[Runnable]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Runnable.html
-
-[Callable]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Callable.html
-
-[Queue]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Queue.html
-
 [example code]: OVERVIEW.md#example-code
-
