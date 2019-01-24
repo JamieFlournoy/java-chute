@@ -53,8 +53,7 @@ repositories {
     jcenter()
     mavenCentral()
 
-    // temporarily...
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    // maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
@@ -67,7 +66,6 @@ dependencies {
     annotationProcessor 'com.google.auto.value:auto-value:1.6.2'
 
     // Dependencies needed for running tests:
-    testImplementation 'com.pervasivecode:concurrent-testing-utils:0.9.0-SNAPSHOT'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.+'
     testImplementation "com.google.truth:truth:0.42"
@@ -246,7 +244,7 @@ publishing {
                 // response. Likewise, publishing assets to a release
                 // staging repository will only work if this version
                 // does _not_ end in "-SNAPSHOT".
-                version = '0.9.0-SNAPSHOT'
+                version = '0.9'
 
                 pom {
                     name = 'Java Chute'
