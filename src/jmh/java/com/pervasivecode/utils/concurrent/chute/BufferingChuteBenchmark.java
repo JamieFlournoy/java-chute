@@ -24,7 +24,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.pervasivecode.utils.concurrent.chute.BufferingChute;
 import com.pervasivecode.utils.concurrent.chute.Chute;
-import com.pervasivecode.utils.time.api.CurrentNanosSource;
+import com.pervasivecode.utils.time.CurrentNanosSource;
 
 /**
  * This is an individual JMH microbenchmark, which tests the performance of BufferingChute against a

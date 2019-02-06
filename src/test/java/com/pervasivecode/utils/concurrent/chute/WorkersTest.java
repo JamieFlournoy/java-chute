@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import com.pervasivecode.utils.time.api.CurrentNanosSource;
+import com.pervasivecode.utils.time.CurrentNanosSource;
 import repeat.Repeat;
 import repeat.RepeatRule;
 

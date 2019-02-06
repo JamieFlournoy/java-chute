@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import com.google.common.collect.ImmutableList;
-import com.pervasivecode.utils.time.api.CurrentNanosSource;
+import com.pervasivecode.utils.time.CurrentNanosSource;
 import repeat.Repeat;
 import repeat.RepeatRule;
 

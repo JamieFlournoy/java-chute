@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
 import com.pervasivecode.utils.concurrent.chute.BufferingChute;
 import com.pervasivecode.utils.concurrent.chute.Chutes;
 import com.pervasivecode.utils.concurrent.chute.ListenableChute;
-import com.pervasivecode.utils.time.api.CurrentNanosSource;
+import com.pervasivecode.utils.time.CurrentNanosSource;
 
 /**
  * This example program shows how a single thread, representing a very busy waiter, can handle a

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import com.google.common.collect.ImmutableList;
-import com.pervasivecode.utils.time.api.TimeSource;
+import com.pervasivecode.utils.time.TimeSource;
 
 class PeriodicBatchingWorker<E> implements Runnable {
   private ChuteExit<E> input;

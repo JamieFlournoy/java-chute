@@ -17,7 +17,7 @@ import com.pervasivecode.utils.concurrent.chute.BufferingChute;
 import com.pervasivecode.utils.concurrent.chute.ChuteEntrance;
 import com.pervasivecode.utils.concurrent.chute.ChuteExit;
 import com.pervasivecode.utils.concurrent.chute.SynchronousMultiplexer;
-import com.pervasivecode.utils.time.api.CurrentNanosSource;
+import com.pervasivecode.utils.time.CurrentNanosSource;
 
 /**
  * This example program is a virus scanner. It reads all of the individual files from an archive,

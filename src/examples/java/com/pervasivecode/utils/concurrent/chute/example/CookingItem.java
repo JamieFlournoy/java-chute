@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 import com.google.auto.value.AutoValue;
-import com.pervasivecode.utils.time.api.CurrentNanosSource;
+import com.pervasivecode.utils.time.CurrentNanosSource;
 
 @AutoValue
 public abstract class CookingItem implements Delayed {

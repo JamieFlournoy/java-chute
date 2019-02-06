@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
-import com.pervasivecode.utils.time.api.TimeSource;
+import com.pervasivecode.utils.time.TimeSource;
 
 /**
  * Factory methods for executable workers that process elements taken from {@link Chute}s.
