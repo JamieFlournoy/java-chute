@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import com.google.common.base.Splitter;
 import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
 
 public class Archive {
 
@@ -37,7 +38,7 @@ public class Archive {
     ByteSource archiveByteSource = asByteSource(getResource(ARCHIVE_RESOURCE_PATH));
     try (InputStream bufferedInputStream = archiveByteSource.openBufferedStream();
         GZIPInputStream uncompressed = new GZIPInputStream(bufferedInputStream)) {
-      return uncompressed.readAllBytes();
+      return ByteStreams.toByteArray(uncompressed);
     }
   }
 

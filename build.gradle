@@ -17,7 +17,7 @@ plugins {
 
     // This adds ErrorProne, which warns about source code that looks
     // like it's likely to be a bug, or to lead to future bugs.
-    id "net.ltgt.errorprone" version "0.6"
+    id "net.ltgt.errorprone" version "0.7"
 
     // This plugin provides integration test tasks using the Cucumber
     // behavior-driven development tool.
@@ -28,7 +28,7 @@ plugins {
 
     // This adds a Gradle plugin for running benchmarks made with the
     // JMH microbenchmarking framework.
-    id "me.champeau.gradle.jmh" version "0.4.7"
+    id "me.champeau.gradle.jmh" version "0.4.8"
 
     // This adds tasks to measure code coverage with JaCoCo.
     id 'jacoco'
@@ -56,31 +56,35 @@ repositories {
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
 dependencies {
     // Dependencies needed at runtime and compile-time, but not
     // exposed in the API of this library:
-    implementation 'com.google.guava:guava:27.0-jre'
+    implementation 'com.google.guava:guava:27.0.1-jre'
     implementation 'com.pervasivecode:time-utils:0.11-SNAPSHOT'
-    implementation 'com.google.auto.value:auto-value-annotations:1.6.2'
+    implementation 'com.google.auto.value:auto-value-annotations:1.6.3'
 
-    annotationProcessor 'com.google.auto.value:auto-value:1.6.2'
+    annotationProcessor 'com.google.auto.value:auto-value:1.6.3'
 
     // Dependencies needed for running tests:
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.+'
     testImplementation "com.google.truth:truth:0.42"
     testImplementation 'com.github.cbismuth:junit-repeat-rule:1.1.2'
-    testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.0.3'
+    testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.1.4'
 
     // To make the Eclipse Gradle Buildship plugin put Cucumber jars on the source path:
-    testImplementation 'io.cucumber:cucumber-java8:4.2.0'
+    testImplementation 'io.cucumber:cucumber-java8:4.2.3'
 
     // Dependencies of the JMH-based benchmark code in src/jmh/java:
-    jmh 'com.google.guava:guava:27.0-jre'
+    jmh 'com.google.guava:guava:27.0.1-jre'
     jmh 'com.pervasivecode:time-utils:0.11-SNAPSHOT'
 
     // Dependencies needed when running ErrorProne checks:
     errorprone "com.google.errorprone:error_prone_core:2.3.2"
+    errorproneJavac "com.google.errorprone:error_prone_core:2.3.2"
 }
 
 // Example code shouldn't be put in the library .jar, but should be compiled
@@ -99,8 +103,8 @@ configurations {
     examplesRuntime.extendsFrom mainRuntime
 }
 dependencies {
-	examplesImplementation 'com.google.auto.value:auto-value-annotations:1.6.2'
-	examplesAnnotationProcessor 'com.google.auto.value:auto-value:1.6.2'
+	examplesImplementation 'com.google.auto.value:auto-value-annotations:1.6.3'
+	examplesAnnotationProcessor 'com.google.auto.value:auto-value:1.6.3'
 }
 
 test {
@@ -151,10 +155,10 @@ cucumberTest {
     stepDefinitionRoots = ['com.pervasivecode.utils.concurrent.testing.cucumber']
 }
 dependencies {
-    cucumberTestImplementation 'io.cucumber:cucumber-java8:4.2.0'
+    cucumberTestImplementation 'io.cucumber:cucumber-java8:4.2.3'
     cucumberTestImplementation 'junit:junit:4.12'
     cucumberTestImplementation "com.google.truth:truth:0.42"
-    cucumberTestImplementation  group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+    cucumberTestImplementation 'com.google.guava:guava:27.0.1-jre'
 }
 sourceSets {
     cucumberTest {
@@ -208,7 +212,7 @@ javadoc {
         // a list of Java package names of classes which are
         // documented in the Javadocs rooted at the specified URL.)
         linksOffline "https://docs.oracle.com/javase/10/docs/api/", 'gradle/javadocs/jdk/10'
-        linksOffline "https://google.github.io/guava/releases/27.0-jre/api/docs/", 'gradle/javadocs/guava/27.0-jre'
+        linksOffline "https://google.github.io/guava/releases/27.0.1-jre/api/docs/", 'gradle/javadocs/guava/27.0.1-jre'
     }
 }
 
