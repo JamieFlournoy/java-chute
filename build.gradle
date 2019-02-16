@@ -63,7 +63,7 @@ dependencies {
     // Dependencies needed at runtime and compile-time, but not
     // exposed in the API of this library:
     implementation 'com.google.guava:guava:27.0.1-jre'
-    implementation 'com.pervasivecode:time-utils:0.11-SNAPSHOT'
+    implementation 'com.pervasivecode:time-utils:0.11'
     implementation 'com.google.auto.value:auto-value-annotations:1.6.3'
 
     annotationProcessor 'com.google.auto.value:auto-value:1.6.3'
@@ -80,7 +80,7 @@ dependencies {
 
     // Dependencies of the JMH-based benchmark code in src/jmh/java:
     jmh 'com.google.guava:guava:27.0.1-jre'
-    jmh 'com.pervasivecode:time-utils:0.11-SNAPSHOT'
+    jmh 'com.pervasivecode:time-utils:0.11'
 
     // Dependencies needed when running ErrorProne checks:
     errorprone "com.google.errorprone:error_prone_core:2.3.2"
