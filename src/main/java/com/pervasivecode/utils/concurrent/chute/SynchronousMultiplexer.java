@@ -2,6 +2,7 @@ package com.pervasivecode.utils.concurrent.chute;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import com.google.common.collect.ImmutableList;
@@ -48,7 +49,7 @@ public final class SynchronousMultiplexer<E> {
    *
    * @return A list of the input ChuteEntrances provided by this instance.
    */
-  public ImmutableList<ChuteEntrance<E>> inputChutes() {
+  public List<ChuteEntrance<E>> inputChutes() {
     return inputChutes;
   }
 

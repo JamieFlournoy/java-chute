@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import com.google.common.collect.ImmutableList;
 import com.google.common.truth.Truth;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -65,7 +64,7 @@ public class SynchronousMultiplexerTest {
     BufferingChute<Integer> outputChute = new BufferingChute<>(2, nanosSource);
     SynchronousMultiplexer<Integer> mux = new SynchronousMultiplexer<>(1, outputChute);
 
-    ImmutableList<ChuteEntrance<Integer>> inputs = mux.inputChutes();
+    List<ChuteEntrance<Integer>> inputs = mux.inputChutes();
     assertThat(inputs).hasSize(1);
     ChuteEntrance<Integer> input = inputs.get(0);
     input.put(3456);
