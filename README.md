@@ -1,6 +1,6 @@
 # Pervasive Code's Java Chute
 
-This library includes classes for simplifying producer/consumer parallel processing using a channel-like data structure called a Chute. 
+This library includes classes for simplifying producer/consumer parallel processing using a channel-like data structure called a Chute.
 
 ## Chute?
 
@@ -29,7 +29,7 @@ A list of [alternatives to this library](ALTERNATIVES.md) is included to help yo
 
 ## Including it in your project
 
-Use groupId `com.pervasivecode`, name `chute`, version `0.9` in your build tool of choice.
+Use groupId `com.pervasivecode`, name `chute`, version `0.10` in your build tool of choice.
 
 
 ### Gradle Example
@@ -41,10 +41,10 @@ If you are using Gradle 4.x, put this in your build.properties file:
     mavenCentral();
 
 // in your build.gradle's dependencies {} block:
-    implementation 'com.pervasivecode:chute:0.9'
+    implementation 'com.pervasivecode:chute:0.10'
 
     // or, if you prefer the separated group/name/version syntax:
-    implementation group: 'com.pervasivecode', name: 'chute', version: '0.9'
+    implementation group: 'com.pervasivecode', name: 'chute', version: '0.10'
 ```
 
 
