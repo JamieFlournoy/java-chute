@@ -4,6 +4,8 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class CookedOrder {
+  protected CookedOrder() {}
+
   public static CookedOrder of(OrderTicket order) {
     return new AutoValue_CookedOrder(order.item(), order.customerNumber());
   }

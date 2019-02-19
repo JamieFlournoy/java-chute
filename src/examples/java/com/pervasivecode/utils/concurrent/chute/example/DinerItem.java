@@ -6,6 +6,8 @@ import com.pervasivecode.utils.concurrent.chute.example.DinerExample.DinerItemTy
 
 @AutoValue
 public abstract class DinerItem {
+  protected DinerItem() {}
+
   public static DinerItem of(DinerItemType type, String name) {
     return new AutoValue_DinerItem(type, name);
   }

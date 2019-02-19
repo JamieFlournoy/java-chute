@@ -11,6 +11,8 @@ import com.pervasivecode.utils.time.CurrentNanosSource;
 
 @AutoValue
 public abstract class CookingItem implements Delayed {
+  protected CookingItem() {}
+
   private static Instant now(CurrentNanosSource nanoSource) {
     return Instant.ofEpochMilli(nanoSource.currentTimeNanoPrecision() / 1_000_000L);
   }

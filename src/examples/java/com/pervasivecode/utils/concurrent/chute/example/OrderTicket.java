@@ -4,6 +4,8 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class OrderTicket {
+  protected OrderTicket() {}
+
   public static OrderTicket of(int customerNumber, DinerItem item) {
     return new AutoValue_OrderTicket(customerNumber, item);
   }

@@ -175,7 +175,9 @@ public class ParallelVirusScannerExample implements ExampleApplication {
   }
 
   @AutoValue
-  public abstract static class SectionWithIndex {
+  protected abstract static class SectionWithIndex {
+    protected SectionWithIndex() {}
+
     public static SectionWithIndex of(int sectionIndex, String sectionContent) {
       return new AutoValue_ParallelVirusScannerExample_SectionWithIndex(sectionIndex,
           sectionContent);
@@ -185,7 +187,9 @@ public class ParallelVirusScannerExample implements ExampleApplication {
   }
 
   @AutoValue
-  public abstract static class SectionResult implements Comparable<SectionResult> {
+  protected abstract static class SectionResult implements Comparable<SectionResult> {
+    protected SectionResult() {}
+
     public static SectionResult of(int sectionIndex, String scanReport) {
       return new AutoValue_ParallelVirusScannerExample_SectionResult(sectionIndex, scanReport);
     }
