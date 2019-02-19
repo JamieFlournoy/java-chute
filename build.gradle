@@ -63,7 +63,7 @@ dependencies {
     // Dependencies needed at runtime and compile-time, but not
     // exposed in the API of this library:
     implementation 'com.google.guava:guava:27.0.1-jre'
-    implementation 'com.pervasivecode:time-utils:0.11'
+    implementation 'com.pervasivecode:time-utils:1.0'
     implementation 'com.google.auto.value:auto-value-annotations:1.6.3'
 
     annotationProcessor 'com.google.auto.value:auto-value:1.6.3'
@@ -80,7 +80,7 @@ dependencies {
 
     // Dependencies of the JMH-based benchmark code in src/jmh/java:
     jmh 'com.google.guava:guava:27.0.1-jre'
-    jmh 'com.pervasivecode:time-utils:0.11'
+    jmh 'com.pervasivecode:time-utils:1.0'
 
     // Dependencies needed when running ErrorProne checks:
     errorprone "com.google.errorprone:error_prone_core:2.3.2"
@@ -212,7 +212,7 @@ javadoc {
         // a list of Java package names of classes which are
         // documented in the Javadocs rooted at the specified URL.)
         linksOffline "https://docs.oracle.com/javase/10/docs/api/", 'gradle/javadocs/jdk/10'
-        linksOffline "https://www.javadoc.io/page/com.pervasivecode/time-utils/0.11/", 'gradle/javadocs/time-utils/0.11'
+        linksOffline "https://www.javadoc.io/page/com.pervasivecode/time-utils/1.0/", 'gradle/javadocs/time-utils/1.0'
         linksOffline "https://google.github.io/guava/releases/27.0.1-jre/api/docs/", 'gradle/javadocs/guava/27.0.1-jre'
     }
 }
